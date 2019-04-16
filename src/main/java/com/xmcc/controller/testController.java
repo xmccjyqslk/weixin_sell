@@ -14,4 +14,10 @@ public class testController {
         log.info("info -> {}","欢迎来到邮箱");
         return "hello. booyt";
     }
+
+    @RequestMapping("/hello1")
+    public String gg(){
+        log.info("info -> {}","欢迎来到邮箱");
+        return "hello. booyt";
+    }
 }
