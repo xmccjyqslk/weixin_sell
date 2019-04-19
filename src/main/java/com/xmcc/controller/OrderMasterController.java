@@ -2,24 +2,26 @@ package com.xmcc.controller;
 
 
 import com.google.common.collect.Maps;
+import com.xmcc.common.ResultEnums;
 import com.xmcc.common.ResultResponse;
 import com.xmcc.dto.OrderMasterDto;
+import com.xmcc.param.DetailParam;
+import com.xmcc.param.PageParam;
 import com.xmcc.service.OrderMasterService;
 import com.xmcc.utils.JsonUtil;
+import com.xmcc.utils.Laji;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,17 +39,74 @@ public class OrderMasterController {
     @ApiOperation(value = "创建订单接口", httpMethod = "POST", response =ResultResponse.class)//json返回
     public ResultResponse create( @Valid @ApiParam(name ="订单对象",value ="json格式",required = true)
                                              OrderMasterDto orderMasterDto, BindingResult bindingResult){
-
+        //参数检验
         HashMap<String, String> map = Maps.newHashMap();
         if (bindingResult.hasErrors()){
             List<String> collect = bindingResult.getFieldErrors().stream().
                     map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
             map.put("参数校验错误", JsonUtil.object2string(collect));
+            return ResultResponse.fail(map);
         }
+        //参数正确返回
         return orderMasterService.insertOrder(orderMasterDto);
     }
 
+    @GetMapping("/list")
+    @ApiOperation(value = "创建订单列表接口", httpMethod = "GET", response =ResultResponse.class)//json返回
+    public ResultResponse list( @ApiParam(name ="page对象",value ="json格式",required = true) PageParam pageParam,
+    BindingResult bindingResult){
+        //参数检验
+        Map<String, String> map = Maps.newHashMap();
+        if (bindingResult.hasErrors()){
+            List<String> collect = bindingResult.getFieldErrors().stream().
+                    map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+            map.put("参数校验错误", JsonUtil.object2string(collect));
+            return ResultResponse.fail(map);
+        }
+        //参数正确返回
+        ResultResponse resultResponse=orderMasterService.getOrderMasterList(pageParam);
+
+        return resultResponse;
+    }
+
+    @GetMapping("/detail")
+    @ApiOperation(value = "创建查询订单详情接口", httpMethod = "GET", response =ResultResponse.class)//json返回
+    public ResultResponse detail( @ApiParam(name ="openid和orderId的集合",value ="json格式",required = true) DetailParam param,
+                                  BindingResult bindingResult){
+        //参数检验
+        HashMap<String, String> map = Maps.newHashMap();
+        if (bindingResult.hasErrors()){
+            List<String> collect = bindingResult.getFieldErrors().stream().
+                    map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+            map.put("参数校验错误", JsonUtil.object2string(map));
+            return  ResultResponse.fail(map);
+        }
+        //参数正确 返回
+        ResultResponse resultResponse=orderMasterService.getOrderDetail(param);
+
+        return resultResponse;
+    }
+
+    @PostMapping("/cancel")
+    @ApiOperation(value = "创建取消订单接口", httpMethod = "POST", response =ResultResponse.class)//json返回
+    public ResultResponse cancel( @ApiParam(name ="openid和orderId的集合",value ="json格式",required = true) DetailParam param,
+                                  BindingResult bindingResult){
+        //参数检验
+        HashMap<String, String> map = Maps.newHashMap();
+        if (bindingResult.hasErrors()){
+            List<String> collect = bindingResult.getFieldErrors().stream().
+                    map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+            map.put("参数校验错误", JsonUtil.object2string(map));
+            return  ResultResponse.fail(map);
+        }
+        ResultResponse resultResponse=orderMasterService.cancel(param);
+
+        return resultResponse;
+    }
+
 }
+
+
 
 
 

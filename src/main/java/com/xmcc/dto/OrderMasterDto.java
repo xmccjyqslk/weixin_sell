@@ -36,4 +36,7 @@ public class OrderMasterDto implements Serializable {
     @Valid //表示需要嵌套验证
     @ApiModelProperty(value = "订单项集合",dataType = "List")
     private List<OrderDetailDto> items;
+
+
+
 }
