@@ -2,7 +2,6 @@ package com.xmcc.controller;
 
 
 import com.xmcc.common.ResultResponse;
-import com.xmcc.service.ProductCategoryService;
 import com.xmcc.service.ProductInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
