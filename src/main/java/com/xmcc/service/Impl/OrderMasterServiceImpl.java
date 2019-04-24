@@ -17,6 +17,7 @@ import com.xmcc.param.PageParam;
 import com.xmcc.repository.OrderMasterRepository;
 import com.xmcc.service.OrderDetailService;
 import com.xmcc.service.OrderMasterService;
+import com.xmcc.service.PayService;
 import com.xmcc.service.ProductInfoService;
 import com.xmcc.utils.BigDecimalUtil;
 import com.xmcc.utils.CustomException;
@@ -46,6 +47,9 @@ public class OrderMasterServiceImpl implements OrderMasterService {
 
     @Resource
     private OrderDetailService orderDetailService;
+
+    @Resource
+    private PayService payService;
 
 
     @Transactional
@@ -151,15 +155,21 @@ public class OrderMasterServiceImpl implements OrderMasterService {
         //查询OrderMaster
         Optional<OrderMaster> optionalOrderMaster = orderMasterRepository.findOne(masterExample);
         if ( ! optionalOrderMaster.isPresent()){
-            return ResultResponse.fail(ResultEnums.NOT_EXITS.getMsg());
+            throw new CustomException(ResultEnums.NOT_EXITS.getMsg());
         }
         OrderMaster orderMaster = optionalOrderMaster.get();
         if (orderMaster.getOrderStatus()!=OrderEnum.NEW.getCode()){
-            return ResultResponse.fail(OrderEnum.ORDER_ERROR.getMsg());
+            throw new CustomException(OrderEnum.ORDER_ERROR.getMsg());
         }
+//        if (orderMaster.getPayStatus()!=PayEnum.FINSH.getCode()){
+//            throw new CustomException(PayEnum.STATUS_ERROR.getMsg());
+//        }
+        payService.refund(orderMaster);
         //将状态设置成 1
         orderMaster.setOrderStatus(OrderEnum.CANCEL.getCode());
+        orderMaster.setPayStatus(PayEnum.FAIL.getCode());
         orderMasterRepository.save(orderMaster);
+
         return ResultResponse.success();
     }
 

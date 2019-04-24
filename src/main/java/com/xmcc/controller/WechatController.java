@@ -3,6 +3,7 @@ package com.xmcc.controller;
 
 import com.xmcc.common.ResultResponse;
 import com.xmcc.utils.CustomException;
+import com.xmcc.utils.JsonUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.api.WxConsts;
@@ -13,7 +14,6 @@ import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
@@ -71,6 +71,7 @@ public class WechatController {
             //获得用户信息  ,授权其实用不到的 这儿打出来看看
             WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
             log.info("获得用户信息:{}",wxMpUser.getNickname());
+            log.info("获得用户信息---> :{}", JsonUtil.object2string(wxMpUser));
         } catch (WxErrorException e) {
             e.printStackTrace();
         }

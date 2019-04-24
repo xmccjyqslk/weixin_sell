@@ -30,6 +30,7 @@ public class WechatConfig {
         wxMpConfigStorage.setAppId(weixinProperties.getAppid());
         //设置密码
         wxMpConfigStorage.setSecret(weixinProperties.getSecret());
+     //   wxMpConfigStorage.set
         return wxMpConfigStorage;
     }
 }
